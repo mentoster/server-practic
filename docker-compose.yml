@@ -1,0 +1,45 @@
+# Request from browser => nginx => static or php, if not static => php-apache => static or php
+# http://localhost:8000/nginx-index.html
+# http://localhost:8000/apache-index.html
+# http://localhost:8000/index.php
+version: "3"
+services:
+  db:
+    container_name: appDB
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - 3308:3306
+    restart: always
+    environment:
+      MYSQL_DATABASE: appDB
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  nginx:
+    build: "./nginx"
+    volumes:
+      - ./nginx-public_html:/home/public_html
+    ports:
+      - 8000:80
+    depends_on:
+      - php-apache
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  php-apache:
+    build: "./php-apache"
+    ports:
+      - 8001:8001
+    volumes:
+      - ./public_html:/home/public_html
+    env_file: ./.env
+    depends_on:
+      - db
+      - redis

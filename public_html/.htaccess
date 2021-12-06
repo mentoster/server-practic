@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Thats protected Area!"
+AuthUserFile /home/public_html/.htpasswd
+Require valid-user
