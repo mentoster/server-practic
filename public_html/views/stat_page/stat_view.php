@@ -1,7 +1,6 @@
 <?php
-include("data/models/fixture_model.php");
-include('vendor/chartisan/php/src/Chartisan.php');
-include("stat_w.php");
+
+include($_SERVER['DOCUMENT_ROOT'] . "/controllers/stat_controller.php");
 $controller = new StatPageController();
 ?>
 <!DOCTYPE html>
@@ -93,7 +92,7 @@ $controller = new StatPageController();
                 .borderColors(),
 
             data: <?php
-                    echo $chart;
+                    echo $controller->chartJson;
                     ?>
         })
         const chart2 = new Chartisan({
@@ -144,7 +143,7 @@ $controller = new StatPageController();
 
     // watermark_image('image_name.jpg', 'watermark.png', 'new_image_name.jpg');
     for ($i = 0; $i < 51; $i++) {
-        echo $fixtList[$i]->toString() . "</br>";
+        echo $controller->fixtList[$i]->toString() . "</br>";
     }
 
     ?>
