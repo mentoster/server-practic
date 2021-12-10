@@ -6,3 +6,6 @@ class PhpInfoViewPage
         phpinfo();
     }
 }
+
+$showInfo = new PhpInfoViewPage();
+$showInfo->Build();

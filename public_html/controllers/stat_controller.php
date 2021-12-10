@@ -1,30 +1,31 @@
 <?php
-include("../data/models/fixture_model.php");
-include('../vendor/chartisan/php/src/Chartisan.php');
+include($_SERVER['DOCUMENT_ROOT'] . "/data/models/fixture_model.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/vendor/chartisan/php/src/Chartisan.php");
 
 use Chartisan\PHP\Chartisan;
 
 class StatPageController
 {
     public $chartJson;
+    public $fixtList;
     public function __construct()
     {
         $this->GenerateFixtures();
     }
     public function GenerateFixtures()
     {
-        $fixtList = array();
+        $this->fixtList = array();
         for ($i = 0; $i < 51; $i++) {
             $fixt = new StockFixtureModel;
             $fixt->randomData();
-            array_push($fixtList, $fixt);
+            array_push($this->fixtList, $fixt);
         }
         $chart = Chartisan::build()
             ->labels(['Мин. цена', 'Цена', 'Макс. цена'])
             ->dataset('GQG ', [2, 4, 6])
             ->dataset('TRT', [2, 3, 7]);
         for ($i = 0; $i < 12; $i++) {
-            $chart = $chart->dataset($fixtList[$i]->name, [$fixtList[$i]->minPrice, $fixtList[$i]->price, $fixtList[$i]->maxPrice]);
+            $chart = $chart->dataset($this->fixtList[$i]->name, [$this->fixtList[$i]->minPrice, $this->fixtList[$i]->price, $this->fixtList[$i]->maxPrice]);
         }
         $this->chartJson = $chart->toJSON();
     }

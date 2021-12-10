@@ -24,7 +24,7 @@
             <th scope="col">Фамилия</th>
         </tr>
         <?php
-        include("../../controllers/second_page_controller.php");
+        include($_SERVER['DOCUMENT_ROOT'] . "/controllers/second_page_controller.php");
         $controller = new SecondPageController();
         $controller->showClients();
         ?>

@@ -1,13 +1,15 @@
 <?php
 
+include $_SERVER['DOCUMENT_ROOT'] . '/data/service/database_service/database_repository.php';
 class SecondPageController
 {
+    private $database;
+    public function __construct()
+    {
+        $this->database = new DatabaseProvider();
+    }
     public function showClients()
     {
-        $mysqli = new mysqli("appDB", "user", "password", "appDB");
-        $result = $mysqli->query("SELECT * FROM users WHERE name = 'Bob' AND surname = 'Marley'");
-        foreach ($result as $row) {
-            echo "<tr><td>{$row['name']}</td><td>{$row['surname']}</td></tr>";
-        }
+        $this->database->showBadClients();
     }
 }

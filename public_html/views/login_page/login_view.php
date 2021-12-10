@@ -18,9 +18,17 @@
     </style>
 </head>
 <?php
-include('/data/service/Manager.php');
+
+include($_SERVER['DOCUMENT_ROOT'] . '/data/service/Manager.php');
+include($_SERVER['DOCUMENT_ROOT'] . '/controllers/login_controller.php');
 session_name('index');
 session_start();
+$controller = new LoginController();
+
+if (file_exists($filename) &&  $_GET['fileDownload'] == "on") {
+    $filename = "/home/public_html/uploads/" . $_GET['whatfile'];
+    $controller->DownloadFile($filename);
+}
 if ($_SESSION['isDark'] == "off") {
     echo '<body style="background-color: white;';
 } else {
@@ -105,62 +113,13 @@ echo str_replace(" ", "\n", $result);
     <input type="submit" name="submit" value="Отправить">
 </form>
 <?php
-
-$filename = "/home/public_html/uploads/" . $_GET['whatfile'];
-
-if (file_exists($filename) &&  $_GET['fileDownload'] == "on") {
-
-    //Get file type and set it as Content Type
-    $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    header('Content-Type: ' . finfo_file($finfo, $filename));
-    finfo_close($finfo);
-
-    //Use Content-Disposition: attachment to specify the filename
-    header('Content-Disposition: attachment; filename=' . basename($filename));
-
-    //No cache
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-
-    //Define file size
-    header('Content-Length: ' . filesize($filename));
-
-    ob_clean();
-    flush();
-    readfile($filename);
-    exit;
-}
-?>
-
-<?php
-
 if (!array_key_exists('visit', $_SESSION)) {
     $_SESSION['visit'] = 0;
 }
 $_SESSION['visit']++;
-
 echo nl2br('Вы были тут ' . $_SESSION['visit'] . ' раз.');
 ?>
-</form>
 
-<!-- <h1>Лучшие клиенты нашего салона</h1>
-    <table>
-        <caption>на текущий месяц</caption>
-        <tr>
-            <th scope="col">Имя</th>
-            <th scope="col">Фамилия</th>
-        </tr>
-        <?php
-        $mysqli = new mysqli("appDB", "user", "password", "appDB");
-        $result = $mysqli->query("SELECT * FROM users");
-        foreach ($result as $row) {
-            echo "<tr><td>{$row['name']}</td><td>{$row['surname']}</td></tr>";
-        }
-
-        ?> -->
-</table>
-<script src="" async defer></script>
 </body>
 
 </html>
