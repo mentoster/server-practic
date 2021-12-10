@@ -5,20 +5,8 @@ include("stat_w.php");
 
 use Chartisan\PHP\Chartisan;
 
-$fixtList = array();
-for ($i = 0; $i < 51; $i++) {
-    $fixt = new StockFixtureModel;
-    $fixt->randomData();
-    array_push($fixtList, $fixt);
-}
-$chart = Chartisan::build()
-    ->labels(['Мин. цена', 'Цена', 'Макс. цена'])
-    ->dataset('GQG ', [2, 4, 6])
-    ->dataset('TRT', [2, 3, 7]);
-for ($i = 0; $i < 12; $i++) {
-    $chart = $chart->dataset($fixtList[$i]->name, [$fixtList[$i]->minPrice, $fixtList[$i]->price, $fixtList[$i]->maxPrice]);
-}
-$chart = $chart->toJSON();
+
+$controller = new StatPageController();
 ?>
 <!DOCTYPE html>
 
@@ -122,7 +110,7 @@ $chart = $chart->toJSON();
                 .borderColors(),
 
             data: <?php
-                    echo $chart;
+                    echo $controller->chartJson;
                     ?>
         })
         const chart3 = new Chartisan({
@@ -132,7 +120,7 @@ $chart = $chart->toJSON();
                 .title('Пончиков график')
                 .pieColors(),
             data: <?php
-                    echo $chart;
+                    echo $controller->chartJson;
                     ?>
         })
         const chart4 = new Chartisan({
@@ -142,7 +130,7 @@ $chart = $chart->toJSON();
                 .title('График пирог')
                 .pieColors(),
             data: <?php
-                    echo $chart;
+                    echo $controller->chartJson;
                     ?>
         })
         for (let i = 1; i < 5; ++i) {
